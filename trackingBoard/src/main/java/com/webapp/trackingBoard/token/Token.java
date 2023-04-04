@@ -1,6 +1,6 @@
 package com.webapp.trackingBoard.token;
 
-import com.webapp.trackingBoard.user.User;
+import com.webapp.trackingBoard.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,5 +37,5 @@ public class Token {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    public User user;
+    public UserEntity userEntity;
 }

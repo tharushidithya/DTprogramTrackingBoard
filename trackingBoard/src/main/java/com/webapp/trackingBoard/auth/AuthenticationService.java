@@ -5,7 +5,7 @@ import com.webapp.trackingBoard.token.Token;
 import com.webapp.trackingBoard.token.TokenRepository;
 import com.webapp.trackingBoard.token.TokenType;
 import com.webapp.trackingBoard.user.Role;
-import com.webapp.trackingBoard.user.User;
+import com.webapp.trackingBoard.user.UserEntity;
 import com.webapp.trackingBoard.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +23,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public RegisterResponse register(RegisterRequest request) {
-        var user = User.builder()
+        var user = UserEntity.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
@@ -59,9 +59,9 @@ public class AuthenticationService {
     }
 
 
-    private void saveUserToken(User user, String jwtToken) {
+    private void saveUserToken(UserEntity userEntity, String jwtToken) {
         var token = Token.builder()
-                .user(user)
+                .userEntity(userEntity)
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
                 .expired(false)
@@ -70,8 +70,8 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
-    private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+    private void revokeAllUserTokens(UserEntity userEntity) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(userEntity.getId());
         if (validUserTokens.isEmpty())
             return;
         validUserTokens.forEach(token -> {
