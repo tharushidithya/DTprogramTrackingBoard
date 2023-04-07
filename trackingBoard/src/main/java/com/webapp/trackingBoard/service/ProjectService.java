@@ -1,7 +1,8 @@
 package com.webapp.trackingBoard.service;
 
-import java.util.List;
 import com.webapp.trackingBoard.model.Project;
+
+import java.util.List;
 
 public interface ProjectService {
     List<Project> getAllProjects();
@@ -9,4 +10,6 @@ public interface ProjectService {
     void createProject(Project project);
     void updateProject(Project project);
     void deleteProject(Long id);
+
+    void addUserProject(Project project);
 }

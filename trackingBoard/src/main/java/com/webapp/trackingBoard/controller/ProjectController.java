@@ -41,6 +41,16 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
+    public ResponseEntity<Project> addUserProject(@RequestBody Project project) {
+        projectService.addUserProject(project);
+        return new ResponseEntity<>(project, HttpStatus.CREATED);
+    }
+
+
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable("id") Long id, @RequestBody Project project) {
