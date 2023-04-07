@@ -1,6 +1,7 @@
 package com.webapp.trackingBoard.service;
 
 import com.webapp.trackingBoard.model.Task;
+import com.webapp.trackingBoard.model.TaskStatus;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,13 @@ public interface TaskService {
     void updateSubTask(Long id, Task subTask);
 
     void deleteSubTask(Long id);
+
+
+
+    double getTotalTasksCount();
+
+    double getTasksCountByStatus(TaskStatus status);
+
 
 }
 
