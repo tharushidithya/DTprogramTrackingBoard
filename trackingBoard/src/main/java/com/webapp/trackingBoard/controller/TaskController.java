@@ -3,13 +3,16 @@ package com.webapp.trackingBoard.controller;
 
 import com.webapp.trackingBoard.model.SubTask;
 import com.webapp.trackingBoard.model.Task;
+import com.webapp.trackingBoard.model.TaskStatus;
 import com.webapp.trackingBoard.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -61,6 +64,10 @@ public class TaskController {
         }
         existingTask.setTaskName(task.getTaskName());
         existingTask.setDescription(task.getDescription());
+        task.setCost_task(task.getCost_task());
+        task.setKpi(task.getKpi());
+        task.setAchieved_kpi(task.getAchieved_kpi());
+        task.setWeight(task.getWeight());
         existingTask.setCompleted(task.isCompleted(task.isCompleted()));
         existingTask.setDueDate(task.getDueDate());
         taskService.updateTask(existingTask);
@@ -82,9 +89,32 @@ public class TaskController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         SubTask subTask = new SubTask();
-//        subTaskName.setName(subTaskName.getName());
+        task.setSubTaskName(task.getSubTaskName());
         task.addSubTask(subTask);
         taskService.updateTask(task);
+        taskService.deleteSubTask(task.getId());
         return new ResponseEntity<>(subTask, HttpStatus.CREATED);
     }
+
+//progress bar status
+    @GetMapping("/tasks/progress")
+    public ResponseEntity<Map<String, Double>> getTaskProgress() {
+        double totalTasks = taskService.getTotalTasksCount();
+        double notStartedCount = taskService.getTasksCountByStatus(TaskStatus.NOT_STARTED);
+        double inProgressCount = taskService.getTasksCountByStatus(TaskStatus.IN_PROGRESS);
+        double completedCount = taskService.getTasksCountByStatus(TaskStatus.COMPLETED);
+
+        Map<String, Double> progressMap = new HashMap<>();
+        progressMap.put("notStartedPercentage", notStartedCount / totalTasks * 100);
+        progressMap.put("inProgressPercentage", inProgressCount / totalTasks * 100);
+        progressMap.put("completedPercentage", completedCount / totalTasks * 100);
+
+        return ResponseEntity.ok(progressMap);
+    }
+
+
+
+
+
 }
+
